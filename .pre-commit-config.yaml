@@ -20,7 +20,7 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: mypy
+        entry: mypy django_shelf example tests
         language: python
         types: [python]
         require_serial: true

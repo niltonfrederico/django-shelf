@@ -45,6 +45,7 @@ tox = "^4.26.0"
 pytest = "^8.4.0"
 pytest-django = "^4.11.1"
 django-stubs = "^5.2.0"
+mypy = "^1.16.1"
 
 
 [tool.ruff]
@@ -90,7 +91,6 @@ select = [
     "C90", # mccabe
     "I",   # isort
     "N",   # pep8-naming
-    "D",   # pydocstyle
     "UP",  # pyupgrade
     "B",   # flake8-bugbear
     "A",   # flake8-builtins
@@ -167,10 +167,10 @@ max-statements = 50
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
-inline-quotes = "single"
+inline-quotes = "double"
 
 [tool.ruff.format]
-quote-style = "single"
+quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
