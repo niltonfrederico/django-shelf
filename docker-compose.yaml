@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  example:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    environment:
+      - DEBUG=1
+      - DJANGO_SETTINGS_MODULE=example.settings
+    command: /opt/pyenv/versions/3.12.2/bin/python manage.py runserver 0.0.0.0:8080
+
+  tests:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+      - PYENV_ROOT=/opt/pyenv
+    command: pytest
+
+  tox:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+      - PYENV_ROOT=/opt/pyenv
+    command: tox
