@@ -1,0 +1,206 @@
+[project]
+name = "django-shelf"
+version = "0.1.0"
+description = "Organize Django admin sections/models without additional apps"
+authors = [
+    { name = "Nilton Teixeira", email = "9078708+niltonfrederico@users.noreply.github.com" },
+]
+readme = "README.md"
+requires-python = ">=3.11"
+license = "AGPL-3.0-or-later"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 5",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Affero General Public License",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: User Interfaces",
+]
+dependencies = ["django>=5.0,<6.0"]
+keywords = ["django", "admin", "organization", "plugin"]
+
+[project.urls]
+"Homepage" = "https://github.com/niltonfrederico/django-shelf"
+"Bug Tracker" = "https://github.com/niltonfrederico/django-shelf/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["django_shelf"]
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.2.0"
+ruff = "^0.11.13"
+tox = "^4.26.0"
+pytest = "^8.4.0"
+pytest-django = "^4.11.1"
+django-stubs = "^5.2.0"
+
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+indent-width = 4
+src = ["example", "django_shelf", "tests"]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    "migrations",
+]
+
+[tool.ruff.lint]
+# Enable a large set of rules for stricter linting
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "W",   # pycodestyle warnings
+    "C90", # mccabe
+    "I",   # isort
+    "N",   # pep8-naming
+    "D",   # pydocstyle
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "A",   # flake8-builtins
+    "C4",  # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "T10", # flake8-debugger
+    "EXE", # flake8-executable
+    "ISC", # flake8-implicit-str-concat
+    "G",   # flake8-logging-format
+    "PIE", # flake8-pie
+    "PT",  # flake8-pytest-style
+    "Q",   # flake8-quotes
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "TID", # flake8-tidy-imports
+    "ARG", # flake8-unused-arguments
+    "ERA", # eradicate
+    "PL",  # pylint
+    "RUF", # ruff-specific
+    "S",   # flake8-bandit (security)
+]
+
+# Specifically ignore certain rules
+ignore = [
+    "D203",   # one-blank-line-before-class (incompatible with D211)
+    "D213",   # multi-line-summary-second-line (incompatible with D212)
+    "ISC001", # conflicts with formatter
+]
+
+# Rules that are automatically fixed when running `ruff --fix`
+fixable = ["ALL"]
+unfixable = ["F401", "F841"] # Don't auto-fix unused imports or variables
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"] # Ignore unused imports in __init__.py files
+"test_*.py" = ["S101"] # Allow assertions in test files
+"tests/*.py" = [
+    "S101",   # Allow assertions in test files
+    "ARG001", # Allow unused arguments in test files
+]
+"manage.py" = ["S"] # Ignore security warnings in Django manage.py
+"settings*.py" = [
+    "S",      # Ignore security warnings in settings
+    "F403",   # Ignore 'import *' in settings
+    "F405",   # Ignore undefined name from * imports
+    "TID252", # Allow 'import *' in settings
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.isort]
+known-first-party = ["django_shelf"]
+known-third-party = ["django"]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.pylint]
+max-args = 6
+max-branches = 12
+max-returns = 6
+max-statements = 50
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "single"
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+
+[tool.mypy]
+python_version = "3.11"
+plugins = ["mypy_django_plugin.main"]
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+disallow_untyped_defs = true
+disallow_untyped_decorators = false
+check_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+strict_optional = true
+
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "manage"
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "example.settings"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "example.settings"
+python_files = ["test_*.py", "*_test.py"]
+testpaths = ["tests"]

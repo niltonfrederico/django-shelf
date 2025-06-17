@@ -1,0 +1,39 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.11.13 # Match your ruff version
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy
+        language: python
+        types: [python]
+        require_serial: true
+        additional_dependencies: ["django-stubs==5.2.0", "types-setuptools"]
+        args: ["--config-file", "pyproject.toml"]
+        pass_filenames: false
+
+  - repo: local
+    hooks:
+      - id: django-check
+        name: Django Check
+        entry: python manage.py check --fail-level WARNING
+        language: system
+        pass_filenames: false
+        types: [python]
+        # Requires the Django project to be installed
