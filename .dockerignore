@@ -1,0 +1,10 @@
+# Ignore everything and remove the ignore for the files we want to keep
+*
+!README.md
+!poetry.lock
+!pyproject.toml
+!django_shelf
+!tests
+!example
+!tox.ini
+!manage.py

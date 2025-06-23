@@ -48,7 +48,6 @@ django-stubs = "^5.2.0"
 mypy = "^1.16.1"
 
 
-
 [tool.poetry.group.example.dependencies]
 djangorestframework = "^3.16.0"
 
