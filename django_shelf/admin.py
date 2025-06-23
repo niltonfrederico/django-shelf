@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import NamedTuple, TypedDict, cast
+from typing import cast
 
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.decorators import register as django_register
@@ -9,43 +9,9 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.utils.text import slugify
 
+from django_shelf.typing import AppDict, CategorizedModel, ModelDict
 
-class ModelCategory(NamedTuple):
-    category: str
-    model_admin_class: type[ModelAdmin]  # type: ignore[type-arg]
-    order: int
-
-
-class ModelAppList(TypedDict):
-    model: type[Model]
-    name: str
-    object_name: str
-    perms: dict[str, bool]
-    admin_url: str
-    add_url: str | None
-    view_only: bool
-
-    # Injected by CategorizedAdminSite
-    order: int | None
-    category: str | None
-
-
-class AppListItem(TypedDict):
-    name: str
-    app_label: str
-    app_url: str
-    has_module_perms: bool
-    __is_category__: bool | None
-    models: list[ModelAppList]
-
-
-class ModelAdminItem(TypedDict):
-    name: str
-    model_admin_class: type[ModelAdmin]  # type: ignore[type-arg]
-    order: int
-
-
-CATEGORIZED_ADMIN_SITE_REGISTER: dict[type[ModelAdmin] | None, ModelCategory] = {}  # type: ignore[type-arg]
+CATEGORIZED_ADMIN_SITE_REGISTER: dict[type[ModelAdmin] | None, CategorizedModel] = {}
 
 
 class CategorizedAdminSite(AdminSite):
@@ -61,7 +27,7 @@ class CategorizedAdminSite(AdminSite):
 
     def get_app_list(
         self, request: HttpRequest, app_label: str | None = None
-    ) -> list[AppListItem]:
+    ) -> list[AppDict]:
         app_list = super().get_app_list(request)
         categorized_apps = {}
 
@@ -85,13 +51,13 @@ class CategorizedAdminSite(AdminSite):
         if app_label:
             return [categorized_apps[app_label]]
 
-        return cast(list[AppListItem], categorized_apps.values())
+        return cast(list[AppDict], categorized_apps.values())
 
     def _categorize_models(
         self,
-        models: list[ModelAppList],
-        categorized_apps: dict[str, AppListItem],
-        app: AppListItem,
+        models: list[ModelDict],
+        categorized_apps: dict[str, AppDict],
+        app: AppDict,
     ) -> None:
         for model in models:
             model_admin_instance = self._registry.get(model["model"])
@@ -101,7 +67,7 @@ class CategorizedAdminSite(AdminSite):
 
             if model_category := CATEGORIZED_ADMIN_SITE_REGISTER.get(model_admin_class):
                 if model_category.category not in categorized_apps:
-                    categorized_apps[model_category.category] = AppListItem(
+                    categorized_apps[model_category.category] = AppDict(
                         name=model_category.category,
                         app_label=model_category.category,
                         app_url=f"/admin/{slugify(model_category.category)}/",
@@ -122,15 +88,15 @@ class CategorizedAdminSite(AdminSite):
 # Decorator to add an Admin model to a specific category
 def categorized(
     category: str, order: int = 999
-) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:  # type: ignore[type-arg]
-    def decorator(model_admin_class: type[ModelAdmin]) -> type[ModelAdmin]:  # type: ignore[type-arg]
+) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
+    def decorator(model_admin_class: type[ModelAdmin]) -> type[ModelAdmin]:
         if not issubclass(model_admin_class, ModelAdmin):
             raise TypeError("The decorated class must be a subclass of ModelAdmin.")
 
         if model_admin_class in CATEGORIZED_ADMIN_SITE_REGISTER:
             return model_admin_class
 
-        CATEGORIZED_ADMIN_SITE_REGISTER[model_admin_class] = ModelCategory(
+        CATEGORIZED_ADMIN_SITE_REGISTER[model_admin_class] = CategorizedModel(
             category=category,
             model_admin_class=model_admin_class,
             order=order,
@@ -146,7 +112,7 @@ def categorized_register(
     site: AdminSite | None = None,
     category: str | None = None,
     order: int = 999,
-) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:  # type: ignore[type-arg]
+) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
     """
     Register the given model(s) classes and wrapped ModelAdmin class with
     admin site:
@@ -159,8 +125,8 @@ def categorized_register(
     """
 
     def wrapper(
-        model_admin_class: type[ModelAdmin],  # type: ignore[type-arg]
-    ) -> type[ModelAdmin]:  # type: ignore[type-arg]
+        model_admin_class: type[ModelAdmin],
+    ) -> type[ModelAdmin]:
         admin_register_decorator = django_register(*models, site=site)
         decorated_admin_class = admin_register_decorator(model_admin_class)
 

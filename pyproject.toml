@@ -137,6 +137,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
     "S101",   # Allow assertions in test files
     "ARG001", # Allow unused arguments in test files
 ]
+"typing.py" = ["A005"] # Ignore built-in name 'typing' in typing.py
 "manage.py" = ["S"] # Ignore security warnings in Django manage.py
 "settings*.py" = [
     "S",      # Ignore security warnings in settings
@@ -191,6 +192,7 @@ check_untyped_defs = true
 disallow_incomplete_defs = true
 no_implicit_optional = true
 strict_optional = true
+disable_error_code = ["type-arg"]
 
 [[tool.mypy.overrides]]
 module = "*.migrations.*"
