@@ -1,24 +1,27 @@
-from django.contrib import admin
+from django.contrib.admin.decorators import register as django_register
 
-from django_shelf.admin import categorized
-from example.models import First, Second, Third
+from django_shelf import admin
+from example.models import First, Fourth, Second, Third
 
 
-@categorized("Custom Category")
-@admin.register(First)
+@admin.register(First, category="Custom Category")
 class FirstAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
     pass
 
 
-@categorized("Custom Category", order=1)
-@admin.register(Second)
-# @categorized("Custom Category", order=3)
+@admin.register(Second, category="Custom Category", order=1)
 class SecondAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
     pass
 
 
-@categorized("Another Category")
-@admin.register(Third)
-# @categorized("Custom Category", order=1)
+@admin.register(Third, category="Other Category")
 class ThirdAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
     pass
+
+
+@django_register(Fourth)
+class FourthAdmin(admin.ModelAdmin):  # type: ignore[type-arg]
+    """
+    This admin is registered using the `@django_register` decorator.
+    It will not be categorized and will appear in the default admin list.
+    """

@@ -2,6 +2,7 @@ from collections.abc import Callable
 from typing import NamedTuple, TypedDict, cast
 
 from django.contrib.admin import ModelAdmin
+from django.contrib.admin.decorators import register as django_register
 from django.contrib.admin.sites import AdminSite
 from django.db.models import Model
 from django.http import HttpRequest
@@ -138,3 +139,37 @@ def categorized(
         return model_admin_class
 
     return decorator
+
+
+def categorized_register(
+    *models: type[Model],
+    site: AdminSite | None = None,
+    category: str | None = None,
+    order: int = 999,
+) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:  # type: ignore[type-arg]
+    """
+    Register the given model(s) classes and wrapped ModelAdmin class with
+    admin site:
+
+    @register(Author)
+    class AuthorAdmin(admin.ModelAdmin):
+        pass
+
+    The `site` kwarg is an admin site to use instead of the default admin site.
+    """
+
+    def wrapper(
+        model_admin_class: type[ModelAdmin],  # type: ignore[type-arg]
+    ) -> type[ModelAdmin]:  # type: ignore[type-arg]
+        admin_register_decorator = django_register(*models, site=site)
+        decorated_admin_class = admin_register_decorator(model_admin_class)
+
+        if category is not None:
+            return categorized(category, order)(decorated_admin_class)
+
+        return decorated_admin_class
+
+    return wrapper
+
+
+register = categorized_register  # Alias for convenience

@@ -23,3 +23,11 @@ class Third(models.Model):
 
     def __str__(self) -> str:
         return self.heading
+
+
+class Fourth(models.Model):
+    label = models.CharField(max_length=100)
+    details = models.TextField()
+
+    def __str__(self) -> str:
+        return self.label
