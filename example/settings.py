@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "example.apps.ExampleConfig",
+    "django_shelf",
 ]
 
 MIDDLEWARE = [
