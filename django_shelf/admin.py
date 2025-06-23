@@ -15,6 +15,12 @@ CATEGORIZED_ADMIN_SITE_REGISTER: dict[type[ModelAdmin] | None, CategorizedModel]
 
 
 class CategorizedAdminSite(AdminSite):
+    """
+    A custom Django AdminSite that categorizes models into categories based on
+    the `categorized` decorator. This allows for better organization of models
+    in the Django admin interface.
+    """
+
     def catch_all_view(self, request: HttpRequest, url: str) -> HttpResponse:
         app_list = self.get_app_list(request)
 
@@ -89,6 +95,12 @@ class CategorizedAdminSite(AdminSite):
 def categorized(
     category: str, order: int = 999
 ) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
+    """
+    Decorator to categorize a ModelAdmin class into a specific category.
+    The `category` argument is the name of the category, and `order` is the
+    order in which the category should appear in the admin interface.
+    """
+
     def decorator(model_admin_class: type[ModelAdmin]) -> type[ModelAdmin]:
         if not issubclass(model_admin_class, ModelAdmin):
             raise TypeError("The decorated class must be a subclass of ModelAdmin.")
@@ -114,14 +126,10 @@ def categorized_register(
     order: int = 999,
 ) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
     """
-    Register the given model(s) classes and wrapped ModelAdmin class with
-    admin site:
-
-    @register(Author)
-    class AuthorAdmin(admin.ModelAdmin):
-        pass
-
-    The `site` kwarg is an admin site to use instead of the default admin site.
+    Decorator to register a ModelAdmin class for one or more models with
+    categorization support. The `category` argument is the name of the category,
+    and `order` is the order in which the category should appear in the admin interface.
+    If `category` is None, the model will be registered without categorization.
     """
 
     def wrapper(
