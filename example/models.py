@@ -1,33 +1,32 @@
 from django.db import models
 
 
-class First(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
+class BaseCategorizedModel(models.Model):
+    foo = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
 
     def __str__(self) -> str:
-        return self.name
+        return self.foo
 
 
-class Second(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-
-    def __str__(self) -> str:
-        return self.title
+class Model1(BaseCategorizedModel):
+    """Empty Model for testing purposes."""
 
 
-class Third(models.Model):
-    heading = models.CharField(max_length=100)
-    body = models.TextField()
-
-    def __str__(self) -> str:
-        return self.heading
+class Model2(BaseCategorizedModel):
+    """Empty Model for testing purposes."""
 
 
-class Fourth(models.Model):
-    label = models.CharField(max_length=100)
-    details = models.TextField()
+class Model3(BaseCategorizedModel):
+    """Empty Model for testing purposes."""
 
-    def __str__(self) -> str:
-        return self.label
+
+class Model4(BaseCategorizedModel):
+    """Empty Model for testing purposes."""
+
+
+class Model5(BaseCategorizedModel):
+    """Empty Model for testing purposes."""

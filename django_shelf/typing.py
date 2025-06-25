@@ -1,11 +1,14 @@
-from typing import NamedTuple, TypedDict
+from typing import TYPE_CHECKING, NamedTuple, TypedDict
 
 from django.contrib.admin import ModelAdmin
 from django.db.models import Model
 
+if TYPE_CHECKING:
+    from django_shelf.admin import Category
+
 
 class CategorizedModel(NamedTuple):
-    category: str
+    category: "Category"
     model_admin_class: type[ModelAdmin]
     order: int
 
@@ -21,7 +24,7 @@ class ModelDict(TypedDict):
 
     # Injected by CategorizedAdminSite
     order: int | None
-    category: str | None
+    category: "Category | None"
 
 
 class AppDict(TypedDict):
@@ -29,5 +32,5 @@ class AppDict(TypedDict):
     app_label: str
     app_url: str
     has_module_perms: bool
-    __is_category__: bool | None
+    __category__: "Category | None"
     models: list[ModelDict]

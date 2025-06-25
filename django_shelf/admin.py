@@ -9,9 +9,40 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.utils.text import slugify
 
+from django_shelf import settings
 from django_shelf.typing import AppDict, CategorizedModel, ModelDict
 
 CATEGORIZED_ADMIN_SITE_REGISTER: dict[type[ModelAdmin] | None, CategorizedModel] = {}
+
+
+class Category:
+    name: str
+    order: int
+
+    def __init__(
+        self, name: str, order: int = settings.DJANGO_SHELF_CATEGORY_DEFAULT_ORDER
+    ):
+        self.name = name
+        self.order = order
+
+
+def _sort_apps(app: AppDict) -> int:
+    """
+    Sort function for apps in the admin interface.
+
+    All apps without order are considered to have an order of 0.
+    """
+    if category := app.get("__category__"):
+        return category.order or 0
+
+    return 0
+
+
+def _sort_models(app: AppDict) -> Callable:
+    if app.get("__category__"):
+        return lambda model: model.get("order", 0)
+
+    return lambda model: model.get("name", "").lower()
 
 
 class CategorizedAdminSite(AdminSite):
@@ -26,7 +57,7 @@ class CategorizedAdminSite(AdminSite):
 
         for app in app_list:
             # If the URL matches a category, redirect to that category
-            if app.get("__is_category__") and slugify(app["name"]) in url:
+            if app.get("__category__") and slugify(app["name"]) in url:
                 return self.app_index(request, app_label=app["app_label"])
 
         return super().catch_all_view(request, url)
@@ -50,14 +81,19 @@ class CategorizedAdminSite(AdminSite):
             if app["models"]
         }
 
+        app_list = cast(list[AppDict], list(categorized_apps.values()))
+
+        # Sort categories by order, then by name
+        app_list.sort(key=_sort_apps)
+
         # Sort models within each category
-        for app in categorized_apps.values():
-            app["models"].sort(key=lambda model: model.get("order", 999))
+        for app in app_list:
+            app["models"].sort(key=_sort_models(app))
 
         if app_label:
             return [categorized_apps[app_label]]
 
-        return cast(list[AppDict], categorized_apps.values())
+        return app_list
 
     def _categorize_models(
         self,
@@ -71,13 +107,14 @@ class CategorizedAdminSite(AdminSite):
                 type(model_admin_instance) if model_admin_instance else None
             )
 
+            keep_app = True
             if model_category := CATEGORIZED_ADMIN_SITE_REGISTER.get(model_admin_class):
-                if model_category.category not in categorized_apps:
-                    categorized_apps[model_category.category] = AppDict(
-                        name=model_category.category,
-                        app_label=model_category.category,
-                        app_url=f"/admin/{slugify(model_category.category)}/",
-                        __is_category__=True,
+                if model_category.category.name not in categorized_apps:
+                    categorized_apps[model_category.category.name] = AppDict(
+                        name=model_category.category.name,
+                        app_label=model_category.category.name,
+                        app_url=f"/admin/{slugify(model_category.category.name)}/",
+                        __category__=model_category.category,
                         has_module_perms=True,
                         models=[],
                     )
@@ -85,15 +122,19 @@ class CategorizedAdminSite(AdminSite):
                 model["order"] = model_category.order
                 model["category"] = model_category.category
 
-                categorized_apps[model_category.category]["models"].append(model)
-            else:
+                categorized_apps[model_category.category.name]["models"].append(model)
+
+                if settings.DJANGO_SHELF_HIDE_CATEGORIZED_MODELS:
+                    keep_app = False
+
+            if keep_app:
                 categorized_apps[app["app_label"]]["models"].append(model)
 
 
 # Categorized decorator
 # Decorator to add an Admin model to a specific category
 def categorized(
-    category: str, order: int = 999
+    category: Category, order: int = settings.DJANGO_SHELF_MODEL_DEFAULT_ORDER
 ) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
     """
     Decorator to categorize a ModelAdmin class into a specific category.
@@ -122,8 +163,8 @@ def categorized(
 def categorized_register(
     *models: type[Model],
     site: AdminSite | None = None,
-    category: str | None = None,
-    order: int = 999,
+    category: Category | None = None,
+    order: int = settings.DJANGO_SHELF_MODEL_DEFAULT_ORDER,
 ) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
     """
     Decorator to register a ModelAdmin class for one or more models with
