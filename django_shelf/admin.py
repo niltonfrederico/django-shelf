@@ -54,10 +54,11 @@ class CategorizedAdminSite(AdminSite):
 
     def catch_all_view(self, request: HttpRequest, url: str) -> HttpResponse:
         app_list = self.get_app_list(request)
+        url_segments = [segment for segment in url.strip("/").split("/") if segment]
 
         for app in app_list:
-            # If the URL matches a category, redirect to that category
-            if app.get("__category__") and slugify(app["name"]) in url:
+            # If the URL matches a category, fake an app_index call
+            if app.get("__category__") and slugify(app["name"]) in url_segments:
                 return self.app_index(request, app_label=app["app_label"])
 
         return super().catch_all_view(request, url)
@@ -88,7 +89,8 @@ class CategorizedAdminSite(AdminSite):
 
         # Sort models within each category
         for app in app_list:
-            app["models"].sort(key=_sort_models(app))
+            sort_key = _sort_models(app)
+            app["models"].sort(key=sort_key)
 
         if app_label:
             return [categorized_apps[app_label]]
