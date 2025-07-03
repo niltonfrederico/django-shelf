@@ -1,5 +1,5 @@
 [project]
-name = "django-shelf"
+name = "django-admin-shelf"
 version = "0.1.0"
 description = "Organize Django admin sections/models without additional apps"
 authors = [
@@ -36,7 +36,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["django_shelf"]
+packages = ["admin_shelf"]
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
@@ -55,7 +55,7 @@ djangorestframework = "^3.16.0"
 target-version = "py311"
 line-length = 88
 indent-width = 4
-src = ["example", "django_shelf", "tests"]
+src = ["example", "admin_shelf", "tests"]
 exclude = [
     ".bzr",
     ".direnv",
@@ -150,7 +150,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 max-complexity = 10
 
 [tool.ruff.lint.isort]
-known-first-party = ["django_shelf"]
+known-first-party = ["admin_shelf"]
 known-third-party = ["django"]
 section-order = [
     "future",
@@ -201,6 +201,10 @@ ignore_errors = true
 [[tool.mypy.overrides]]
 module = "manage"
 ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disable_error_code = ["import-not-found", "no-untyped-def"]
 
 [tool.django-stubs]
 django_settings_module = "example.settings"

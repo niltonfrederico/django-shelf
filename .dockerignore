@@ -3,7 +3,7 @@
 !README.md
 !poetry.lock
 !pyproject.toml
-!django_shelf
+!admin_shelf
 !tests
 !example
 !tox.ini

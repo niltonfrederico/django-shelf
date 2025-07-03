@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
-    "django_shelf",
+    "admin_shelf",
     "example.apps.ExampleConfig",
 ]
 
@@ -128,4 +128,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Django Shelf settings
-DJANGO_SHELF_HIDE_CATEGORIZED_MODELS = True
+DJANGO_SHELF = {
+    "HIDE_CATEGORIZED_MODELS": True,
+}

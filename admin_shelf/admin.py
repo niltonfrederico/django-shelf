@@ -9,8 +9,8 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.utils.text import slugify
 
-from django_shelf import settings
-from django_shelf.typing import AppDict, CategorizedModel, ModelDict
+from admin_shelf import settings
+from admin_shelf.typing import AppDict, CategorizedModel, ModelDict
 
 CATEGORIZED_ADMIN_SITE_REGISTER: dict[type[ModelAdmin] | None, CategorizedModel] = {}
 
@@ -19,9 +19,16 @@ class Category:
     name: str
     order: int
 
-    def __init__(
-        self, name: str, order: int = settings.DJANGO_SHELF_CATEGORY_DEFAULT_ORDER
-    ):
+    def __init__(self, name: str, order: int = settings.CATEGORY_DEFAULT_ORDER):
+        if not isinstance(name, str):
+            raise ValueError("Category name must be a string.")
+
+        if not name.strip():
+            raise ValueError("Category name cannot be an empty string.")
+
+        if not isinstance(order, int):
+            raise TypeError("Order must be an integer.")
+
         self.name = name
         self.order = order
 
@@ -126,7 +133,7 @@ class CategorizedAdminSite(AdminSite):
 
                 categorized_apps[model_category.category.name]["models"].append(model)
 
-                if settings.DJANGO_SHELF_HIDE_CATEGORIZED_MODELS:
+                if settings.HIDE_CATEGORIZED_MODELS:
                     keep_app = False
 
             if keep_app:
@@ -136,7 +143,7 @@ class CategorizedAdminSite(AdminSite):
 # Categorized decorator
 # Decorator to add an Admin model to a specific category
 def categorized(
-    category: Category, order: int = settings.DJANGO_SHELF_MODEL_DEFAULT_ORDER
+    category: Category, order: int = settings.MODEL_DEFAULT_ORDER
 ) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
     """
     Decorator to categorize a ModelAdmin class into a specific category.
@@ -166,7 +173,7 @@ def categorized_register(
     *models: type[Model],
     site: AdminSite | None = None,
     category: Category | None = None,
-    order: int = settings.DJANGO_SHELF_MODEL_DEFAULT_ORDER,
+    order: int = settings.MODEL_DEFAULT_ORDER,
 ) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
     """
     Decorator to register a ModelAdmin class for one or more models with

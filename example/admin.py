@@ -1,6 +1,6 @@
 from django.contrib.admin.decorators import register as django_register
 
-from django_shelf import admin
+from admin_shelf import admin
 from example.models import Model1, Model2, Model3, Model4, Model5
 
 CustomCategory = admin.Category(name="Custom Category", order=2)

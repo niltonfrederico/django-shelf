@@ -4,7 +4,7 @@ from django.contrib.admin import ModelAdmin
 from django.db.models import Model
 
 if TYPE_CHECKING:
-    from django_shelf.admin import Category
+    from admin_shelf.admin import Category
 
 
 class CategorizedModel(NamedTuple):
