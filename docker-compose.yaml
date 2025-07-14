@@ -11,6 +11,11 @@ services:
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=example.settings
+    command: [
+      "poetry",
+      "run",
+      "example",
+    ]
 
   tests:
     build: .
@@ -19,7 +24,11 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYENV_ROOT=/opt/pyenv
-    command: pytest
+    command: [
+      "poetry",
+      "run",
+      "tests",
+    ]
 
   tox:
     build: .

@@ -25,7 +25,15 @@ classifiers = [
     "Topic :: Software Development :: User Interfaces",
 ]
 dependencies = ["django>=5.0,<6.0"]
-keywords = ["django", "admin", "organization", "plugin"]
+keywords = [
+    "django",
+    "admin",
+    "organization",
+    "plugin",
+    "django-admin",
+    "categories",
+    "order",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/niltonfrederico/django-shelf"
@@ -38,15 +46,23 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = ["admin_shelf"]
 
+[tool.poetry]
+packages = [{ include = "admin_shelf" }]
+
+[tool.poetry.scripts]
+tests = "scripts:tests"
+example = "scripts:example"
+
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^4.2.0"
-ruff = "^0.11.13"
-tox = "^4.26.0"
-pytest = "^8.4.0"
-pytest-django = "^4.11.1"
 django-stubs = "^5.2.0"
 mypy = "^1.16.1"
-
+pre-commit = "^4.2.0"
+pytest = "^8.4.0"
+pytest-cov = "^6.2.1"
+pytest-django = "^4.11.1"
+pytest-xdist = "^3.8.0"
+ruff = "^0.11.13"
+tox = "^4.26.0"
 
 [tool.poetry.group.example.dependencies]
 djangorestframework = "^3.16.0"
