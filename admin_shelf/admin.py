@@ -32,6 +32,30 @@ class Category:
         self.name = name
         self.order = order
 
+    def register(
+        self,
+        *models: type[Model],
+        site: AdminSite | None = None,
+        order: int = settings.MODEL_DEFAULT_ORDER,
+    ) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
+        """
+        Decorator to register a ModelAdmin class for one or more models with
+        categorization support. The `category` argument is the name of the category,
+        and `order` is the order in which the category should appear in the admin
+        interface.
+        If `category` is None, the model will be registered without categorization.
+        """
+
+        def wrapper(
+            model_admin_class: type[ModelAdmin],
+        ) -> type[ModelAdmin]:
+            admin_register_decorator = django_register(*models, site=site)
+            decorated_admin_class = admin_register_decorator(model_admin_class)
+
+            return categorized(self, order)(decorated_admin_class)
+
+        return wrapper
+
 
 def _sort_apps(app: AppDict) -> int:
     """
@@ -167,33 +191,3 @@ def categorized(
         return model_admin_class
 
     return decorator
-
-
-def categorized_register(
-    *models: type[Model],
-    site: AdminSite | None = None,
-    category: Category | None = None,
-    order: int = settings.MODEL_DEFAULT_ORDER,
-) -> Callable[[type[ModelAdmin]], type[ModelAdmin]]:
-    """
-    Decorator to register a ModelAdmin class for one or more models with
-    categorization support. The `category` argument is the name of the category,
-    and `order` is the order in which the category should appear in the admin interface.
-    If `category` is None, the model will be registered without categorization.
-    """
-
-    def wrapper(
-        model_admin_class: type[ModelAdmin],
-    ) -> type[ModelAdmin]:
-        admin_register_decorator = django_register(*models, site=site)
-        decorated_admin_class = admin_register_decorator(model_admin_class)
-
-        if category is not None:
-            return categorized(category, order)(decorated_admin_class)
-
-        return decorated_admin_class
-
-    return wrapper
-
-
-register = categorized_register  # Alias for convenience

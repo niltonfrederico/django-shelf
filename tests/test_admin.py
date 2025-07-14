@@ -1,10 +1,23 @@
 from collections.abc import Callable
 
 import pytest
+from example.admin import Model1Admin
 from example.models import Model1
 
-from admin_shelf.admin import Category, _sort_apps, _sort_models
+from admin_shelf.admin import (
+    CATEGORIZED_ADMIN_SITE_REGISTER,
+    Category,
+    _sort_apps,
+    _sort_models,
+    categorized,
+)
 from admin_shelf.typing import AppDict, ModelDict
+
+
+@pytest.fixture(autouse=True)
+def cleanup_categories():
+    yield
+    CATEGORIZED_ADMIN_SITE_REGISTER.clear()
 
 
 @pytest.fixture
@@ -93,3 +106,17 @@ class TestPrivateFunctions:
             "order": expected_order,
         }
         assert _sort_models(app_dict)(model_dict) == expected_lambda(model_dict)
+
+
+class TestCategorizedDecorator:
+    def test_should_raise_type_error_when_decorated_class_is_not_model_admin(
+        self, category: Category
+    ):
+        with pytest.raises(ValueError, match="Wrapped class must subclass ModelAdmin."):
+
+            @category.register(Model1)  # type: ignore
+            class NotModelAdmin:
+                pass
+
+    def test_should_return_already_registered_model_admin(self, category: Category):
+        assert categorized(category, 123)(Model1Admin) == Model1Admin
