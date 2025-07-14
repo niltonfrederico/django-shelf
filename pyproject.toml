@@ -150,8 +150,8 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 "__init__.py" = ["F401"] # Ignore unused imports in __init__.py files
 "test_*.py" = ["S101"] # Allow assertions in test files
 "tests/*.py" = [
-    "S101",   # Allow assertions in test files
-    "ARG001", # Allow unused arguments in test files
+    "S101", # Allow assertions in test files
+    "ARG",  # Allow unused arguments in test files
 ]
 "typing.py" = ["A005"] # Ignore built-in name 'typing' in typing.py
 "manage.py" = ["S"] # Ignore security warnings in Django manage.py
