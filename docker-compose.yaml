@@ -24,7 +24,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYENV_ROOT=/opt/pyenv
-    command: [
+    command: [de
       "poetry",
       "run",
       "tests",
@@ -32,8 +32,6 @@ services:
 
   tox:
     build: .
-    volumes:
-      - .:/app
     environment:
       - PYTHONPATH=/app
       - PYENV_ROOT=/opt/pyenv

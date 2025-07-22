@@ -2,7 +2,7 @@ import os
 import subprocess
 
 
-def tests():
+def tests() -> None:
     command = [
         "pytest",
         "-n",
@@ -16,7 +16,7 @@ def tests():
     subprocess.run(" ".join(command), shell=True, check=True)  # noqa: S602
 
 
-def example():
+def example() -> None:
     django_superuser_username = "admin"
     django_superuser_email = "admin@admin.com"
     os.environ["DJANGO_SUPERUSER_USERNAME"] = django_superuser_username
