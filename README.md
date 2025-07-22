@@ -61,6 +61,12 @@ class Model2Admin(admin.ModelAdmin):
 
 Yes, it is just that simple. You can also use the `@register` decorator without passing a category, in which case it will be registered to the default category. Or use the default `register` from django admin if you want to register your model admin without a category.
 
+Before shelf:
+![Before using admin shelf](docs/assets/before-shelf.png)
+
+After shelf:
+![After using admin shelf](docs/assets/after-shelf.png)
+
 ## Anything else?
 
 ### Running the example app
