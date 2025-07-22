@@ -1,6 +1,6 @@
 [project]
 name = "django-admin-shelf"
-version = "0.1.1"
+version = "0.1.2"
 description = "Organize Django admin sections/models without additional apps"
 authors = [
     { name = "Nilton Teixeira", email = "9078708+niltonfrederico@users.noreply.github.com" },
