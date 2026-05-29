@@ -67,6 +67,30 @@ Before shelf:
 After shelf:
 ![After using admin shelf](https://raw.githubusercontent.com/niltonfrederico/django-shelf/refs/heads/main/docs/assets/after-shelf.png)
 
+## Translation support
+
+`Category(name=...)` accepts both plain strings and Django's lazy translation
+proxies. To localize a category, pass a `gettext_lazy` value:
+
+```python
+from django.utils.translation import gettext_lazy as _
+from admin_shelf.admin import Category
+
+shop_category = Category(name=_("Shop"))
+
+@shop_category.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    pass
+```
+
+The name is resolved against the active language on every request, so users
+switching languages see the category label update accordingly.
+
+**Recommendation:** define each `Category` once and reuse the same instance
+across `@register` calls. Categories are deduplicated by the identity of the
+`name` value; two lazy proxies built from the same source string are distinct
+Python objects and would create separate buckets.
+
 ## Anything else?
 
 ### Running the example app

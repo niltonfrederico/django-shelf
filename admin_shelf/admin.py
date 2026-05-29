@@ -7,6 +7,7 @@ from django.contrib.admin.sites import AdminSite
 from django.db.models import Model
 from django.http import HttpRequest
 from django.http.response import HttpResponse
+from django.utils.functional import Promise
 from django.utils.text import slugify
 
 from admin_shelf import settings
@@ -16,14 +17,18 @@ CATEGORIZED_ADMIN_SITE_REGISTER: dict[type[ModelAdmin] | None, CategorizedModel]
 
 
 class Category:
-    name: str
+    name: str | Promise
     order: int
 
-    def __init__(self, name: str, order: int = settings.CATEGORY_DEFAULT_ORDER):
-        if not isinstance(name, str):
-            raise ValueError("Category name must be a string.")
+    def __init__(
+        self,
+        name: str | Promise,
+        order: int = settings.CATEGORY_DEFAULT_ORDER,
+    ):
+        if not isinstance(name, str | Promise):
+            raise ValueError("Category name must be a string or lazy string.")
 
-        if not name.strip():
+        if not str(name).strip():
             raise ValueError("Category name cannot be an empty string.")
 
         if not isinstance(order, int):
@@ -89,16 +94,18 @@ class CategorizedAdminSite(AdminSite):
 
         for app in app_list:
             # If the URL matches a category, fake an app_index call
-            if app.get("__category__") and slugify(app["name"]) in url_segments:
-                return self.app_index(request, app_label=app["app_label"])
+            if app.get("__category__") and slugify(str(app["name"])) in url_segments:
+                return self.app_index(request, app_label=cast(str, app["app_label"]))
 
         return super().catch_all_view(request, url)
 
     def get_app_list(
-        self, request: HttpRequest, app_label: str | None = None
+        self,
+        request: HttpRequest,
+        app_label: str | Promise | None = None,
     ) -> list[AppDict]:
         app_list = super().get_app_list(request)
-        categorized_apps = {}
+        categorized_apps: dict[str | Promise, AppDict] = {}
 
         for app in app_list:
             categorized_apps[app["app_label"]] = app
@@ -131,7 +138,7 @@ class CategorizedAdminSite(AdminSite):
     def _categorize_models(
         self,
         models: list[ModelDict],
-        categorized_apps: dict[str, AppDict],
+        categorized_apps: dict[str | Promise, AppDict],
         app: AppDict,
     ) -> None:
         for model in models:
@@ -146,7 +153,7 @@ class CategorizedAdminSite(AdminSite):
                     categorized_apps[model_category.category.name] = AppDict(
                         name=model_category.category.name,
                         app_label=model_category.category.name,
-                        app_url=f"/admin/{slugify(model_category.category.name)}/",
+                        app_url=f"/admin/{slugify(str(model_category.category.name))}/",
                         __category__=model_category.category,
                         has_module_perms=True,
                         models=[],

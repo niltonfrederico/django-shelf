@@ -1,0 +1,11 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: django-admin-shelf example\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Other Category"
+msgstr "Outra Categoria"

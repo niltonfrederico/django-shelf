@@ -1,6 +1,7 @@
 from collections.abc import Callable
 
 import pytest
+from django.utils.translation import gettext_lazy as _
 from example.admin import Model1Admin
 from example.models import Model1
 
@@ -49,8 +50,10 @@ class TestCategory:
     @pytest.mark.parametrize(
         ("name", "order", "expected_exception"),
         [
-            (None, 1, ValueError("Category name must be a string.")),
+            (None, 1, ValueError("Category name must be a string or lazy string.")),
+            (123, 1, ValueError("Category name must be a string or lazy string.")),
             ("", 1, ValueError("Category name cannot be an empty string.")),
+            (_(""), 1, ValueError("Category name cannot be an empty string.")),
             ("fake-name", "not-an-integer", TypeError("Order must be an integer.")),
         ],
     )
@@ -59,6 +62,13 @@ class TestCategory:
     ):
         with pytest.raises(type(expected_exception), match=str(expected_exception)):
             Category(name=name, order=order)
+
+    def test_should_preserve_lazy_proxy_identity_when_name_is_gettext_lazy(self):
+        lazy_name = _("Shop")
+
+        category = Category(name=lazy_name)
+
+        assert category.name is lazy_name
 
 
 class TestPrivateFunctions:
@@ -112,7 +122,9 @@ class TestCategorizedDecorator:
     def test_should_raise_type_error_when_decorated_class_is_not_model_admin(
         self, category: Category
     ):
-        with pytest.raises(ValueError, match="Wrapped class must subclass ModelAdmin."):
+        with pytest.raises(
+            ValueError, match=r"Wrapped class must subclass ModelAdmin\."
+        ):
 
             @category.register(Model1)  # type: ignore
             class NotModelAdmin:

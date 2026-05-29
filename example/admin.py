@@ -1,10 +1,11 @@
 from django.contrib.admin.decorators import register as django_register
+from django.utils.translation import gettext_lazy as _
 
 from admin_shelf import admin
 from example.models import Model1, Model2, Model3, Model4, Model5
 
 custom_category = admin.Category(name="Custom Category", order=2)
-other_category = admin.Category(name="Other Category", order=1)
+other_category = admin.Category(name=_("Other Category"), order=1)
 
 
 @custom_category.register(Model1, order=2)

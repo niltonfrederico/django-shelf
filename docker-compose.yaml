@@ -6,7 +6,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8080:8080"
+      - "8888:8888"
     environment:
       - DEBUG=1
       - DJANGO_SETTINGS_MODULE=example.settings
@@ -18,8 +18,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYENV_ROOT=/opt/pyenv
-    command: [de
-      "poetry",
-      "run",
-      "tests",
-    ]
+    command: >
+      sh -c "msgfmt tests/locale/pt_BR/LC_MESSAGES/django.po
+      -o tests/locale/pt_BR/LC_MESSAGES/django.mo
+      && poetry run tests"
