@@ -10,6 +10,23 @@
      |__/             |___/
 ```
 
+## What's in here?
+
+- [Who?](#who)
+- [Bu... but why?](#bu-but-why)
+- [How do I use it?](#how-do-i-use-it)
+- [A little piece of documentation](#a-little-piece-of-documentation)
+- [What can I configure?](#what-can-i-configure)
+- [How does it hook into the admin?](#how-does-it-hook-into-the-admin)
+- [Translation support](#translation-support)
+- [What might trip me up?](#what-might-trip-me-up)
+- [Anything else?](#anything-else)
+  - [Running the example app](#running-the-example-app)
+  - [Running the tests](#running-the-tests)
+- [How do I contribute?](#how-do-i-contribute)
+- [Is it true that bananas are radioactive?](#is-it-true-that-bananas-are-radioactive)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+
 ## Who?
 
 **Django Shelf** is meant to be a simple way to categorize your model admins instead of relying on creating new apps for each category.
@@ -72,6 +89,14 @@ Before shelf:
 After shelf:
 ![After using admin shelf](https://raw.githubusercontent.com/niltonfrederico/django-shelf/refs/heads/main/docs/assets/after-shelf.png)
 
+## What can I configure?
+
+<!-- TODO: DJANGO_ADMIN_SHELF table (HIDE_CATEGORIZED_MODELS, CATEGORY_DEFAULT_ORDER, MODEL_DEFAULT_ORDER) + paragraph on categorized vs plain coexistence (_categorize_models flow at conceptual level). -->
+
+## How does it hook into the admin?
+
+<!-- TODO: explain that adding admin_shelf to INSTALLED_APPS swaps admin.site.__class__ via apps.py:ready(); cover the custom AdminSite subclass edge case. -->
+
 ## Translation support
 
 `Category(name=...)` accepts both plain strings and Django's lazy translation
@@ -98,6 +123,10 @@ switching languages see the category label update accordingly.
 across `@register` calls. Buckets are keyed by `name`, so two `Category("Shop")`
 end up merged anyway — but sharing one instance keeps intent obvious and makes
 a later rename a one-liner.
+
+## What might trip me up?
+
+<!-- TODO: reusing same Category instance across files, slug derivation from name, lazy-slug URL changes per language, ordering ties (stable sort, insertion order wins), apps disappearing when HIDE_CATEGORIZED_MODELS=True and all models are categorized. -->
 
 ## Anything else?
 
