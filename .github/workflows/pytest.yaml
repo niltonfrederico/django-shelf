@@ -86,6 +86,10 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
 
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+
   tox:
     name: Tox (${{ matrix.tox-env }})
     needs: [lint, pytest]
@@ -125,7 +129,14 @@ jobs:
         run: pip install tox
 
       - name: Run tox
-        run: tox -e ${{ matrix.tox-env }}
+        run: tox -e "$TOX_ENV"
         env:
+          TOX_ENV: ${{ matrix.tox-env }}
           DJANGO_SETTINGS_MODULE: example.settings
           PYTHONPATH: ${{ github.workspace }}
+
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          flags: ${{ matrix.tox-env }}
