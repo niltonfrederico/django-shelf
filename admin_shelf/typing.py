@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, NamedTuple, TypedDict
 
 from django.contrib.admin import ModelAdmin
 from django.db.models import Model
+from django.utils.functional import Promise
 
 if TYPE_CHECKING:
     from admin_shelf.admin import Category
@@ -28,8 +29,8 @@ class ModelDict(TypedDict):
 
 
 class AppDict(TypedDict):
-    name: str
-    app_label: str
+    name: str | Promise
+    app_label: str | Promise
     app_url: str
     has_module_perms: bool
     __category__: "Category | None"
