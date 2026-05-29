@@ -20,6 +20,8 @@ RUN pip install poetry && \
 # Copy application code
 COPY . .
 
+RUN poetry install --only-root
+
 # Expose port for the Django dev server
 EXPOSE 8888
 
