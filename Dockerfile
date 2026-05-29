@@ -21,7 +21,7 @@ RUN pip install poetry && \
 COPY . .
 
 # Expose port for the Django dev server
-EXPOSE 8080
+EXPOSE 8888
 
 # Run the Django development server
 CMD ["poetry", "run", "example"]

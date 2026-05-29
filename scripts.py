@@ -21,6 +21,15 @@ def example() -> None:
     django_superuser_email = "admin@admin.com"
     os.environ["DJANGO_SUPERUSER_USERNAME"] = django_superuser_username
 
+    # Compile translation catalogs (.po -> .mo) for the example app.
+    compile_messages_command = [
+        "msgfmt",
+        "example/locale/pt_BR/LC_MESSAGES/django.po",
+        "-o",
+        "example/locale/pt_BR/LC_MESSAGES/django.mo",
+    ]
+    subprocess.run(" ".join(compile_messages_command), shell=True, check=True)  # noqa: S602
+
     # First Migration to ensure database is set up and create user
     migrate_command = [
         "python",
@@ -73,6 +82,6 @@ def example() -> None:
         "python",
         "manage.py",
         "runserver",
-        "0.0.0.0:8080",
+        "0.0.0.0:8888",
     ]
     subprocess.run(" ".join(runserver_command), shell=True, check=True)  # noqa: S602
