@@ -17,10 +17,10 @@
 - [Bu... but why?](#bu-but-why)
 - [How do I use it?](#how-do-i-use-it)
 - [A little piece of documentation](#a-little-piece-of-documentation)
-- [What can I configure?](#what-can-i-configure)
-- [How does it hook into the admin?](#how-does-it-hook-into-the-admin)
-- [Translation support](#translation-support)
-- [What might trip me up?](#what-might-trip-me-up)
+  - [What can I configure?](#what-can-i-configure)
+  - [How does it hook into the admin?](#how-does-it-hook-into-the-admin)
+  - [Translation support](#translation-support)
+  - [What might trip me up?](#what-might-trip-me-up)
 - [Anything else?](#anything-else)
   - [Running the example app](#running-the-example-app)
   - [Running the tests](#running-the-tests)
@@ -89,7 +89,7 @@ Before shelf:
 After shelf:
 ![After using admin shelf](https://raw.githubusercontent.com/niltonfrederico/django-shelf/refs/heads/main/docs/assets/after-shelf.png)
 
-## What can I configure?
+### What can I configure?
 
 Settings live under `DJANGO_ADMIN_SHELF` in your Django settings, as a dict. All keys are optional — the defaults are sane.
 
@@ -111,7 +111,7 @@ Under the hood, when Django builds its admin app list this library walks each ap
 
 If `HIDE_CATEGORIZED_MODELS` is `True` and **every** model in an app ends up categorized, the original app section just disappears from the sidebar — there is nothing left to show.
 
-## How does it hook into the admin?
+### How does it hook into the admin?
 
 You don't need to touch `admin.site` yourself. As soon as `admin_shelf` is in `INSTALLED_APPS`, the app's `ready()` hook mutates `admin.site.__class__` to `CategorizedAdminSite`. The singleton stays the same — only its class changes — so anything you had already wired to `admin.site` keeps working.
 
@@ -124,7 +124,7 @@ class MyAdminSite(CategorizedAdminSite):
     site_header = "My project"
 ```
 
-## Translation support
+### Translation support
 
 `Category(name=...)` accepts both plain strings and Django's lazy translation
 proxies. To localize a category, pass a `gettext_lazy` value:
@@ -151,7 +151,7 @@ across `@register` calls. Buckets are keyed by `name`, so two `Category("Shop")`
 end up merged anyway — but sharing one instance keeps intent obvious and makes
 a later rename a one-liner.
 
-## What might trip me up?
+### What might trip me up?
 
 A few edges worth knowing about:
 
