@@ -1,14 +1,17 @@
-[![codecov](https://codecov.io/github/niltonfrederico/django-shelf/branch/main/graph/badge.svg?token=SATSBNDY0B)](https://codecov.io/github/niltonfrederico/django-shelf)
-![pip](https://img.shields.io/pypi/v/django-admin-shelf)
-
-```
+<table align="center">
+<tr><td><pre>
   ____  _                           ____  _          _  __
  |  _ \(_) __ _ _ __   __ _  ___   / ___|| |__   ___| |/ _|
  | | | | |/ _` | '_ \ / _` |/ _ \  \___ \| '_ \ / _ \ | |_
  | |_| | | (_| | | | | (_| | (_) |  ___) | | | |  __/ |  _|
  |____// |\__,_|_| |_|\__, |\___/  |____/|_| |_|\___|_|_|
      |__/             |___/
-```
+</pre></td></tr>
+<tr><td align="center">
+<a href="https://codecov.io/github/niltonfrederico/django-shelf"><img src="https://codecov.io/github/niltonfrederico/django-shelf/branch/main/graph/badge.svg?token=SATSBNDY0B" alt="codecov"/></a>
+<img src="https://img.shields.io/pypi/v/django-admin-shelf" alt="pip"/>
+</td></tr>
+</table>
 
 ## What's in here?
 
