@@ -54,14 +54,14 @@ tests = "scripts:tests"
 example = "scripts:example"
 
 [tool.poetry.group.dev.dependencies]
-django-stubs = ">=5.2.9,<7.0.0"
-mypy = "^1.16.1"
-pre-commit = "^4.2.0"
+django-stubs = "^6.0.5"
+mypy = "^2.1.0"
+pre-commit = "^4.6.0"
 pytest = "^9.0.3"
-pytest-cov = "^6.2.1"
-pytest-django = "^4.11.1"
+pytest-cov = "^7.1.0"
+pytest-django = "^4.12.0"
 pytest-xdist = "^3.8.0"
-ruff = "^0.11.13"
+ruff = "^0.15.15"
 
 [tool.poetry.group.example.dependencies]
 djangorestframework = "^3.16.0"
@@ -153,7 +153,8 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
     "ARG",  # Allow unused arguments in test files
 ]
 "typing.py" = ["A005"] # Ignore built-in name 'typing' in typing.py
-"manage.py" = ["S"] # Ignore security warnings in Django manage.py
+"manage.py" = ["S", "PLC0415"] # Ignore security warnings and late imports in Django manage.py
+"apps.py" = ["PLC0415"] # AppConfig.ready() uses late imports to avoid AppRegistryNotReady
 "settings*.py" = [
     "S",      # Ignore security warnings in settings
     "F403",   # Ignore 'import *' in settings
