@@ -12,6 +12,7 @@
 
 ## What's in here?
 
+- [What's in here?](#whats-in-here)
 - [Who?](#who)
 - [Bu... but why?](#bu-but-why)
 - [How do I use it?](#how-do-i-use-it)
@@ -25,7 +26,6 @@
   - [Running the tests](#running-the-tests)
 - [How do I contribute?](#how-do-i-contribute)
 - [Is it true that bananas are radioactive?](#is-it-true-that-bananas-are-radioactive)
-- [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Who?
 
@@ -91,11 +91,38 @@ After shelf:
 
 ## What can I configure?
 
-<!-- TODO: DJANGO_ADMIN_SHELF table (HIDE_CATEGORIZED_MODELS, CATEGORY_DEFAULT_ORDER, MODEL_DEFAULT_ORDER) + paragraph on categorized vs plain coexistence (_categorize_models flow at conceptual level). -->
+Settings live under `DJANGO_ADMIN_SHELF` in your Django settings, as a dict. All keys are optional — the defaults are sane.
+
+```python
+DJANGO_ADMIN_SHELF = {
+    "HIDE_CATEGORIZED_MODELS": True,
+    "CATEGORY_DEFAULT_ORDER": 0,
+    "MODEL_DEFAULT_ORDER": 0,
+}
+```
+
+| Key                       | Default | What it does                                                                                                                                     |
+| ------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `HIDE_CATEGORIZED_MODELS` | `True`  | When `True`, a categorized model only shows up inside its category. When `False`, it shows up in both the category and its original app section. |
+| `CATEGORY_DEFAULT_ORDER`  | `0`     | Order used when a `Category` is created without an explicit `order`.                                                                             |
+| `MODEL_DEFAULT_ORDER`     | `0`     | Order used when a model is registered without an explicit `order`.                                                                               |
+
+Under the hood, when Django builds its admin app list this library walks each app's models. If a model was registered through `@category.register(...)`, it gets moved (or copied, depending on `HIDE_CATEGORIZED_MODELS`) into a bucket named after the category. Categories are then sorted by `order`, and so are the models inside each category.
+
+If `HIDE_CATEGORIZED_MODELS` is `True` and **every** model in an app ends up categorized, the original app section just disappears from the sidebar — there is nothing left to show.
 
 ## How does it hook into the admin?
 
-<!-- TODO: explain that adding admin_shelf to INSTALLED_APPS swaps admin.site.__class__ via apps.py:ready(); cover the custom AdminSite subclass edge case. -->
+You don't need to touch `admin.site` yourself. As soon as `admin_shelf` is in `INSTALLED_APPS`, the app's `ready()` hook mutates `admin.site.__class__` to `CategorizedAdminSite`. The singleton stays the same — only its class changes — so anything you had already wired to `admin.site` keeps working.
+
+If you maintain your **own** `AdminSite` subclass, that mutation will overwrite it. In that case, inherit from `CategorizedAdminSite` directly:
+
+```python
+from admin_shelf.admin import CategorizedAdminSite
+
+class MyAdminSite(CategorizedAdminSite):
+    site_header = "My project"
+```
 
 ## Translation support
 
@@ -126,7 +153,17 @@ a later rename a one-liner.
 
 ## What might trip me up?
 
-<!-- TODO: reusing same Category instance across files, slug derivation from name, lazy-slug URL changes per language, ordering ties (stable sort, insertion order wins), apps disappearing when HIDE_CATEGORIZED_MODELS=True and all models are categorized. -->
+A few edges worth knowing about:
+
+- **One `Category` per name, please.** Buckets are keyed by `category.name`, so multiple `Category("Shop")` instances merge into the same bucket. It works, but defining each category once and importing it from a single module keeps intent obvious and saves you from chasing duplicates when you want to rename.
+
+- **Category URLs come from the slug of the name.** `Category(name="Custom Category")` lives at `/admin/custom-category/`. The slug is computed from `str(name)` at request time, so it always reflects the current value of the name.
+
+- **Lazy names change URLs per language.** With `Category(name=_("Shop"))`, the URL gets translated too — `/admin/shop/` in English, `/admin/loja/` in Portuguese. Bookmarks and external links pointing at the old slug will 404 after a language switch. If you need a stable URL across languages, use a plain string `name`. ([#27](https://github.com/niltonfrederico/django-shelf/issues/27) tracks a config knob to make this opt-in.)
+
+- **Order ties keep insertion order.** Sorting is stable. Two categories with the same `order` (including the default `0`) appear in the order they were first registered. Non-categorized apps also count as `0`, so they interleave with categorized ones unless you bump categories above `0`. ([#28](https://github.com/niltonfrederico/django-shelf/issues/28) tracks a configurable sub-sort — alphabetical or custom callable — to break ties.)
+
+- **Apps can disappear.** With `HIDE_CATEGORIZED_MODELS=True` (default), if every model in an app gets moved into categories, the original app section vanishes from the sidebar. Intentional — there is nothing left to show — but it can surprise you when a familiar group "disappears" after a refactor.
 
 ## Anything else?
 
@@ -156,4 +193,4 @@ Check the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information on how to
 
 ## Is it true that bananas are radioactive?
 
-Yes.
+[Yes](https://www.epa.gov/radtown/natural-radioactivity-food).
