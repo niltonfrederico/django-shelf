@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
+from pytest_django.fixtures import SettingsWrapper
 
 from admin_shelf.admin import Category
 
@@ -10,7 +11,7 @@ LOCALE_PATH = Path(__file__).parent / "locale"
 
 
 @pytest.fixture(autouse=True)
-def _locale_paths(settings):
+def _locale_paths(settings: SettingsWrapper) -> None:
     settings.LOCALE_PATHS = [str(LOCALE_PATH)]
     settings.USE_I18N = True
 
