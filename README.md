@@ -1,6 +1,5 @@
 [![codecov](https://codecov.io/github/niltonfrederico/django-shelf/branch/main/graph/badge.svg?token=SATSBNDY0B)](https://codecov.io/github/niltonfrederico/django-shelf)
-![pip](https://img.shields.io/pypi/v/django-admin-shelf
-)
+![pip](https://img.shields.io/pypi/v/django-admin-shelf)
 
 ```
  ░▒▓███████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░      ░▒▓████████▓▒░
@@ -13,17 +12,20 @@
 ```
 
 ## Who?
+
 **Django Shelf** is meant to be a simple way to categorize your model admins instead of relying on creating new apps for each category.
 
 ## Bu... but why?
+
 The main reason is simply to avoid creating new apps for each category of model admins. This is especially useful if you got legacy applications that will break if you try to split them into new apps.
 
 Yes, I know that this is not the best practice, but sometimes you just need to do it.
 
 ## How do I use it?
+
 1. Install the package using `pip install django-admin-shelf`.
-2. Add `admin_shelf` to your `INSTALLED_APPS` in your Django settings.
-3. Create categories in your `admin.py` file as follows:
+1. Add `admin_shelf` to your `INSTALLED_APPS` in your Django settings.
+1. Create categories in your `admin.py` file as follows:
 
 ```python
 from admin_shelf.admin import Category
@@ -96,22 +98,27 @@ Python objects and would create separate buckets.
 ### Running the example app
 
 To run the example app, you can use the following commands:
+
 ```bash
 # You need to have docker installed
 docker compose up example
 ```
 
 ### Running the tests
+
 To run the tests, you can use the following commands:
+
 ```bash
 # You need to have docker installed
 docker compose up test
 ```
 
 ## How do I contribute?
+
 If you want to contribute to this project, you can do so by creating an issue! And if you want to contribute with code, you can fork the repository and create a pull request.
 
 Check the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information on how to contribute.
 
 ## Is it true that bananas are radioactive?
+
 Yes.

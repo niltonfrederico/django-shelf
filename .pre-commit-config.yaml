@@ -16,6 +16,13 @@ repos:
         args: [--fix]
       - id: ruff-format
 
+  - repo: https://github.com/hukkin/mdformat
+    rev: 1.0.0
+    hooks:
+      - id: mdformat
+        additional_dependencies:
+          - mdformat-gfm
+
   - repo: local
     hooks:
       - id: mypy
