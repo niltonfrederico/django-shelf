@@ -24,7 +24,7 @@ repos:
         language: python
         types: [python]
         require_serial: true
-        additional_dependencies: ["django-stubs==5.2.0", "types-setuptools"]
+        additional_dependencies: ["django-stubs==6.0.5", "types-setuptools"]
         args: ["--config-file", "pyproject.toml"]
         pass_filenames: false
 

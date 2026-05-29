@@ -1,48 +1,131 @@
-name: Run tests with Poetry and Pytest
+name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  POETRY_VIRTUALENVS_CREATE: "true"
+  POETRY_VIRTUALENVS_IN_PROJECT: "true"
 
 jobs:
-  test:
+  lint:
+    name: Lint (pre-commit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install gettext
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gettext
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "${HOME}/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Compile translation catalogs
+        run: msgfmt tests/locale/pt_BR/LC_MESSAGES/django.po -o tests/locale/pt_BR/LC_MESSAGES/django.mo
+
+      - name: Run pre-commit
+        run: poetry run pre-commit run --all-files --show-diff-on-failure
+        env:
+          DJANGO_SETTINGS_MODULE: example.settings
+          PYTHONPATH: ${{ github.workspace }}
+
+  pytest:
+    name: Pytest (fail-fast)
+    needs: lint
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install gettext
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gettext
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "${HOME}/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Install dependencies
+        run: poetry install --with dev
+
+      - name: Compile translation catalogs
+        run: msgfmt tests/locale/pt_BR/LC_MESSAGES/django.po -o tests/locale/pt_BR/LC_MESSAGES/django.mo
+
+      - name: Run tests
+        run: poetry run tests
+        env:
+          DJANGO_SETTINGS_MODULE: example.settings
+          PYTHONPATH: ${{ github.workspace }}
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+
+  tox:
+    name: Tox (${{ matrix.tox-env }})
+    needs: [lint, pytest]
+    if: |
+      always() &&
+      needs.lint.result == 'success' &&
+      (needs.pytest.result == 'success' || needs.pytest.result == 'skipped')
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: ["3.13"]
-
+        include:
+          - { python: "3.11", tox-env: "py311-django52" }
+          - { python: "3.12", tox-env: "py312-django52" }
+          - { python: "3.12", tox-env: "py312-django60" }
+          - { python: "3.13", tox-env: "py313-django52" }
+          - { python: "3.13", tox-env: "py313-django60" }
+          - { python: "3.14", tox-env: "py314-django52" }
+          - { python: "3.14", tox-env: "py314-django60" }
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: 'pip'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
 
-    - name: Install Poetry
-      run: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        echo "${HOME}/.local/bin" >> $GITHUB_PATH
+      - name: Install gettext
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gettext
 
-    - name: Install dependencies
-      run: |
-        poetry install --with dev
+      - name: Compile translation catalogs
+        run: msgfmt tests/locale/pt_BR/LC_MESSAGES/django.po -o tests/locale/pt_BR/LC_MESSAGES/django.mo
 
-    - name: Compile translation catalogs
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y --no-install-recommends gettext
-        msgfmt tests/locale/pt_BR/LC_MESSAGES/django.po -o tests/locale/pt_BR/LC_MESSAGES/django.mo
+      - name: Install tox
+        run: pip install tox
 
-    - name: Run tests
-      run: |
-        poetry run tests
-      env:
-        DJANGO_SETTINGS_MODULE: example.settings
-        PYTHONPATH: ${{ github.workspace }}
-
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v5
+      - name: Run tox
+        run: tox -e ${{ matrix.tox-env }}
+        env:
+          DJANGO_SETTINGS_MODULE: example.settings
+          PYTHONPATH: ${{ github.workspace }}
