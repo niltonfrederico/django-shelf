@@ -10,6 +10,7 @@
 <tr><td align="center">
 <a href="https://codecov.io/github/niltonfrederico/django-shelf"><img src="https://codecov.io/github/niltonfrederico/django-shelf/branch/main/graph/badge.svg?token=SATSBNDY0B" alt="codecov"/></a>
 <img src="https://img.shields.io/pypi/v/django-admin-shelf" alt="pip"/>
+<a href="https://djangopackages.org/packages/p/django-shelf/"><img src="https://img.shields.io/badge/Django%20Packages-django--shelf-8c3c26.svg" alt="Latest on Django Packages"/></a>
 </td></tr>
 </table>
 
