@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 640" width="1280" height="640" font-family="-apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c4b33"/>
+      <stop offset="1" stop-color="#06382a"/>
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4f8aa3"/>
+      <stop offset="1" stop-color="#417690"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="0" dy="6" result="off"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.35"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+
+  <!-- subtle dotted texture, kept inside safe area -->
+  <g opacity="0.06" fill="#ffffff">
+    <circle cx="80" cy="80" r="2"/><circle cx="160" cy="80" r="2"/><circle cx="240" cy="80" r="2"/>
+    <circle cx="80" cy="160" r="2"/><circle cx="160" cy="160" r="2"/>
+    <circle cx="1120" cy="560" r="2"/><circle cx="1200" cy="560" r="2"/>
+    <circle cx="1120" cy="480" r="2"/><circle cx="1200" cy="480" r="2"/>
+  </g>
+
+  <!-- left column: title + tagline -->
+  <g>
+    <!-- eyebrow -->
+    <text x="80" y="180" fill="#9ad1b6" font-size="22" font-weight="600" letter-spacing="4">DJANGO LIBRARY</text>
+
+    <!-- title -->
+    <text x="80" y="260" fill="#ffffff" font-size="64" font-weight="800" letter-spacing="-1">django-admin-shelf</text>
+
+    <!-- tagline -->
+    <text x="80" y="328" fill="#d6efe1" font-size="30" font-weight="500">Organize ModelAdmins into categories —</text>
+    <text x="80" y="368" fill="#d6efe1" font-size="30" font-weight="500">no new apps, no templates.</text>
+
+    <!-- features -->
+    <g fill="#ffffff" font-size="22" font-weight="500" opacity="0.92">
+      <g transform="translate(80,440)">
+        <circle cx="10" cy="-7" r="4" fill="#9ad1b6"/>
+        <text x="28" y="0">Decorator API:  @category.register(Model)</text>
+      </g>
+      <g transform="translate(80,478)">
+        <circle cx="10" cy="-7" r="4" fill="#9ad1b6"/>
+        <text x="28" y="0">Ordering, grouping, drop-in install</text>
+      </g>
+      <g transform="translate(80,516)">
+        <circle cx="10" cy="-7" r="4" fill="#9ad1b6"/>
+        <text x="28" y="0">Django 5.x  ·  Python 3.11+</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- right column: shelf mock -->
+  <g transform="translate(740,150)" filter="url(#shadow)">
+    <!-- card -->
+    <rect x="0" y="0" width="460" height="380" rx="14" fill="#ffffff"/>
+    <!-- title bar -->
+    <text x="24" y="42" fill="#222" font-size="20" font-weight="700">Site administration</text>
+
+    <!-- category 1 -->
+    <rect x="24" y="70" width="412" height="36" rx="3" fill="url(#header)"/>
+    <text x="40" y="93" fill="#ffffff" font-size="14" font-weight="700" letter-spacing="1.5">CONTENT</text>
+    <text x="40" y="128" fill="#447e9b" font-size="15" font-weight="600">Articles</text>
+    <text x="40" y="150" fill="#447e9b" font-size="15" font-weight="600">Categories</text>
+
+    <!-- category 2 -->
+    <rect x="24" y="172" width="412" height="36" rx="3" fill="url(#header)"/>
+    <text x="40" y="195" fill="#ffffff" font-size="14" font-weight="700" letter-spacing="1.5">BILLING</text>
+    <text x="40" y="230" fill="#447e9b" font-size="15" font-weight="600">Invoices</text>
+    <text x="40" y="252" fill="#447e9b" font-size="15" font-weight="600">Subscriptions</text>
+
+    <!-- category 3 -->
+    <rect x="24" y="274" width="412" height="36" rx="3" fill="url(#header)"/>
+    <text x="40" y="297" fill="#ffffff" font-size="14" font-weight="700" letter-spacing="1.5">AUTHENTICATION</text>
+    <text x="40" y="332" fill="#447e9b" font-size="15" font-weight="600">Users</text>
+    <text x="40" y="354" fill="#447e9b" font-size="15" font-weight="600">Groups</text>
+  </g>
+</svg>
