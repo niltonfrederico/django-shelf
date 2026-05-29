@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from django.test import SimpleTestCase, override_settings
+import pytest
 from django.utils import translation
 from django.utils.translation import gettext_lazy as _
 
@@ -9,8 +9,13 @@ from admin_shelf.admin import Category
 LOCALE_PATH = Path(__file__).parent / "locale"
 
 
-@override_settings(LOCALE_PATHS=[str(LOCALE_PATH)], USE_I18N=True)
-class TestI18nIntegration(SimpleTestCase):
+@pytest.fixture(autouse=True)
+def _locale_paths(settings):
+    settings.LOCALE_PATHS = [str(LOCALE_PATH)]
+    settings.USE_I18N = True
+
+
+class TestI18nIntegration:
     def test_should_preserve_lazy_proxy_when_constructed_with_gettext_lazy(self):
         lazy_name = _("Shop")
 
