@@ -18,8 +18,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - PYENV_ROOT=/opt/pyenv
-    command: [de
-      "poetry",
-      "run",
-      "tests",
-    ]
+    command: >
+      sh -c "msgfmt tests/locale/pt_BR/LC_MESSAGES/django.po
+      -o tests/locale/pt_BR/LC_MESSAGES/django.mo
+      && poetry run tests"
