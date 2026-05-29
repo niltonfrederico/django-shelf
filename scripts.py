@@ -12,6 +12,9 @@ def tests() -> None:
         "--cov-report=term",
         "--cov-report=html:htmlcov",
         "--cov-report=xml:coverage.xml",
+        "--junitxml=junit.xml",
+        "-o",
+        "junit_family=legacy",
     ]
     subprocess.run(" ".join(command), shell=True, check=True)  # noqa: S602
 
