@@ -2,13 +2,12 @@
 ![pip](https://img.shields.io/pypi/v/django-admin-shelf)
 
 ```
- ░▒▓███████▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓█▓▒░      ░▒▓████████▓▒░
-░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░
-░▒▓█▓▒░      ░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░
- ░▒▓██████▓▒░░▒▓████████▓▒░▒▓██████▓▒░ ░▒▓█▓▒░      ░▒▓██████▓▒░
-       ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░
-       ░▒▓█▓▒░▒▓█▓▒░░▒▓█▓▒░▒▓█▓▒░      ░▒▓█▓▒░      ░▒▓█▓▒░
-░▒▓███████▓▒░░▒▓█▓▒░░▒▓█▓▒░▒▓████████▓▒░▒▓████████▓▒░▒▓█▓▒░
+  ____  _                           ____  _          _  __
+ |  _ \(_) __ _ _ __   __ _  ___   / ___|| |__   ___| |/ _|
+ | | | | |/ _` | '_ \ / _` |/ _ \  \___ \| '_ \ / _ \ | |_
+ | |_| | | (_| | | | | (_| | (_) |  ___) | | | |  __/ |  _|
+ |____// |\__,_|_| |_|\__, |\___/  |____/|_| |_|\___|_|_|
+     |__/             |___/
 ```
 
 ## Who?
@@ -28,6 +27,8 @@ Yes, I know that this is not the best practice, but sometimes you just need to d
 1. Create categories in your `admin.py` file as follows:
 
 ```python
+from django.contrib import admin
+
 from admin_shelf.admin import Category
 from example.models import Model1
 
@@ -42,11 +43,13 @@ class Model1Admin(admin.ModelAdmin):
 
 The `admin_shelf.admin.Category` class is used to create categories for your model admins. You can register your model admins to these categories using the `@category.register(Model)` decorator.
 
-You can set a order for both the categories and the model admins by passing an `order` argument to the `Category` class and the `@register` decorator, respectively.
+You can set an order for both the categories and the model admins by passing an `order` argument to the `Category` class and the `@register` decorator, respectively.
 
 Example:
 
 ```python
+from django.contrib import admin
+
 from admin_shelf.admin import Category
 from example.models import Model1, Model2
 
@@ -61,7 +64,7 @@ class Model2Admin(admin.ModelAdmin):
     pass
 ```
 
-Yes, it is just that simple. You can also use the `@register` decorator without passing a category, in which case it will be registered to the default category. Or use the default `register` from django admin if you want to register your model admin without a category.
+Yes, it is just that simple. Use the default `register` from django admin if you want to register your model admin without a category.
 
 Before shelf:
 ![Before using admin shelf](https://raw.githubusercontent.com/niltonfrederico/django-shelf/refs/heads/main/docs/assets/before-shelf.png)
@@ -75,8 +78,11 @@ After shelf:
 proxies. To localize a category, pass a `gettext_lazy` value:
 
 ```python
+from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+
 from admin_shelf.admin import Category
+from myapp.models import Product
 
 shop_category = Category(name=_("Shop"))
 
@@ -89,9 +95,9 @@ The name is resolved against the active language on every request, so users
 switching languages see the category label update accordingly.
 
 **Recommendation:** define each `Category` once and reuse the same instance
-across `@register` calls. Categories are deduplicated by the identity of the
-`name` value; two lazy proxies built from the same source string are distinct
-Python objects and would create separate buckets.
+across `@register` calls. Buckets are keyed by `name`, so two `Category("Shop")`
+end up merged anyway — but sharing one instance keeps intent obvious and makes
+a later rename a one-liner.
 
 ## Anything else?
 
@@ -117,7 +123,7 @@ docker compose up test
 
 If you want to contribute to this project, you can do so by creating an issue! And if you want to contribute with code, you can fork the repository and create a pull request.
 
-Check the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information on how to contribute.
+Check the [CONTRIBUTING](CONTRIBUTING) file for more information on how to contribute.
 
 ## Is it true that bananas are radioactive?
 
