@@ -123,7 +123,7 @@ docker compose up test
 
 If you want to contribute to this project, you can do so by creating an issue! And if you want to contribute with code, you can fork the repository and create a pull request.
 
-Check the [CONTRIBUTING](CONTRIBUTING) file for more information on how to contribute.
+Check the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information on how to contribute.
 
 ## Is it true that bananas are radioactive?
 

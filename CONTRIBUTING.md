@@ -19,7 +19,7 @@ There will be only five rules for contributing to this project:
 
 And **one** wish:
 
-I really don't like to work with django templates, that's why I created it this way. If you want to contribute with a new feature that requires a template, please consider using a different approach. This minimizes the learning curve for whoever uses it and makes it easier to maintain the project in the long run. If you have a great idea that requires a template, let's discuss it first to find the best way to implement it without relying on Django's templating system.
+I really don't like to work with Django templates, that's why I created it this way. If you want to contribute with a new feature that requires a template, please consider using a different approach. This minimizes the learning curve for whoever uses it and makes it easier to maintain the project in the long run. If you have a great idea that requires a template, let's discuss it first to find the best way to implement it without relying on Django's templating system.
 
 Thanks y'all!
 Nilton Teixeira, aka @kuresto
