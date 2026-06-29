@@ -24,7 +24,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: User Interfaces",
 ]
-dependencies = ["django>=5.2,<7.0"]
+dependencies = ["django>=5.2.15,<7.0"]
 keywords = [
     "django",
     "admin",
@@ -54,7 +54,7 @@ tests = "scripts:tests"
 example = "scripts:example"
 
 [tool.poetry.group.dev.dependencies]
-django-stubs = "^6.0.5"
+django-stubs = "^6.0.6"
 mypy = "^2.1.0"
 pre-commit = "^4.6.0"
 pytest = "^9.0.3"
