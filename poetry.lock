@@ -103,19 +103,19 @@ files = [
 
 [[package]]
 name = "bump-my-version"
-version = "1.3.0"
+version = "1.5.0"
 description = "Version bump your Python project"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "bump_my_version-1.3.0-py3-none-any.whl", hash = "sha256:3cdaa54588d2443a29303b77e7539417187952c3d22f87bfdd32c0fe6af2f570"},
-    {file = "bump_my_version-1.3.0.tar.gz", hash = "sha256:5780137a8d93378af3839798fcba01c7e6cb28dcc5aa5a7ab4d8507787f1995c"},
+    {file = "bump_my_version-1.5.0-py3-none-any.whl", hash = "sha256:6545a1e06a54b7038a153d41260a273914a235533d50eba825380a5b182ac258"},
+    {file = "bump_my_version-1.5.0.tar.gz", hash = "sha256:701ea1acef2c945e5e0d418ccdd57669cf3169c807cd8683c62086e9db9949b3"},
 ]
 
 [package.dependencies]
-click = "<8.4"
-httpx = ">=0.28.1"
+click = "!=8.4"
+httpx2 = "*"
 pydantic = ">=2.0.0"
 pydantic-settings = "*"
 questionary = "*"
@@ -134,18 +134,6 @@ groups = ["dev"]
 files = [
     {file = "cachetools-7.1.4-py3-none-any.whl", hash = "sha256:323dc4127934744db5b54eb4924482d7edafbf9554e820d1531c2e08c0e4ef54"},
     {file = "cachetools-7.1.4.tar.gz", hash = "sha256:437f55a4e0c1b01a4f3077cc470e6991d47430970e36fbcb77e2be0df4fc1cd6"},
-]
-
-[[package]]
-name = "certifi"
-version = "2026.5.20"
-description = "Python package for providing Mozilla's CA Bundle."
-optional = false
-python-versions = ">=3.7"
-groups = ["dev"]
-files = [
-    {file = "certifi-2026.5.20-py3-none-any.whl", hash = "sha256:3c52e209ba0a4ad7aebe60436a4ab349c39e1e602e8c134221e546902ad25897"},
-    {file = "certifi-2026.5.20.tar.gz", hash = "sha256:69dea482ab64caa7b9f6aba1c6bf48bb6a5448d1c0f1b17ab42ad8c763a5344d"},
 ]
 
 [[package]]
@@ -433,51 +421,53 @@ files = [
 ]
 
 [[package]]
-name = "httpcore"
-version = "1.0.9"
+name = "httpcore2"
+version = "2.9.1"
 description = "A minimal low-level HTTP client."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "httpcore-1.0.9-py3-none-any.whl", hash = "sha256:2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55"},
-    {file = "httpcore-1.0.9.tar.gz", hash = "sha256:6e34463af53fd2ab5d807f399a9b45ea31c3dfa2276f15a2c3f00afff6e176e8"},
+    {file = "httpcore2-2.9.1-py3-none-any.whl", hash = "sha256:6182472379e855fe4221246a2bb7ecede403bc61c6798062ae1787d051ccde26"},
+    {file = "httpcore2-2.9.1.tar.gz", hash = "sha256:4d8acbf8b306f48c9d6046591fd5ba4037d1b1b1000d140fc2c3eab1e9a0c0e2"},
 ]
 
 [package.dependencies]
-certifi = "*"
 h11 = ">=0.16"
+truststore = ">=0.10"
 
 [package.extras]
-asyncio = ["anyio (>=4.0,<5.0)"]
+asyncio = ["anyio (>=4.5.0,<5.0)"]
 http2 = ["h2 (>=3,<5)"]
 socks = ["socksio (==1.*)"]
 trio = ["trio (>=0.22.0,<1.0)"]
 
 [[package]]
-name = "httpx"
-version = "0.28.1"
+name = "httpx2"
+version = "2.9.1"
 description = "The next generation HTTP client."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad"},
-    {file = "httpx-0.28.1.tar.gz", hash = "sha256:75e98c5f16b0f35b567856f597f06ff2270a374470a5c2392242528e3e3e42fc"},
+    {file = "httpx2-2.9.1-py3-none-any.whl", hash = "sha256:1820fe14a9ab1107bfeff39259987429450b070ec0ff38cc87eb0d8c97fdc71a"},
+    {file = "httpx2-2.9.1.tar.gz", hash = "sha256:1932a768737e3666291582833da748cc4e563c337cf96706fccc04fa6e58764a"},
 ]
 
 [package.dependencies]
-anyio = "*"
-certifi = "*"
-httpcore = "==1.*"
-idna = "*"
+anyio = ">=4.10"
+httpcore2 = "2.9.1"
+idna = ">=3.18"
+truststore = ">=0.10"
+typing-extensions = {version = ">=4.5.0", markers = "python_version < \"3.13\""}
 
 [package.extras]
 brotli = ["brotli ; platform_python_implementation == \"CPython\"", "brotlicffi ; platform_python_implementation != \"CPython\""]
-cli = ["click (==8.*)", "pygments (==2.*)", "rich (>=10,<14)"]
+cli = ["click (>=8.4)", "pygments (==2.*)", "rich (>=10,<16)"]
 http2 = ["h2 (>=3,<5)"]
 socks = ["socksio (==1.*)"]
-zstd = ["zstandard (>=0.18.0)"]
+ws = ["wsproto (>=1.2)"]
+zstd = ["zstandard (>=0.18.0) ; python_version <= \"3.13\""]
 
 [[package]]
 name = "identify"
@@ -496,14 +486,14 @@ license = ["ukkonen"]
 
 [[package]]
 name = "idna"
-version = "3.17"
+version = "3.18"
 description = "Internationalized Domain Names in Applications (IDNA)"
 optional = false
 python-versions = ">=3.9"
 groups = ["dev"]
 files = [
-    {file = "idna-3.17-py3-none-any.whl", hash = "sha256:466e48829084efe2548012b855df21540b96f2e20e51bd124c851536556a592c"},
-    {file = "idna-3.17.tar.gz", hash = "sha256:5eb0cb53bc467c12eadcf6de83163ad8527cec9416f44b9b61b19caedad2b87f"},
+    {file = "idna-3.18-py3-none-any.whl", hash = "sha256:7f952cbe720b688055e3f87de14f5c3e5fdaa8bc3928985c4077ca689de849a2"},
+    {file = "idna-3.18.tar.gz", hash = "sha256:ffb385a7e039654cef1ab9ef32c6fafe283c0c0467bba1d9029738ce4a14a848"},
 ]
 
 [package.extras]
@@ -1401,6 +1391,18 @@ completion = ["argcomplete (>=3.6.3)"]
 testing = ["devpi-process (>=1.1.1)", "pytest (>=9.0.2)", "pytest-mock (>=3.15.1)"]
 
 [[package]]
+name = "truststore"
+version = "0.10.4"
+description = "Verify certificates using native system trust stores"
+optional = false
+python-versions = ">=3.10"
+groups = ["dev"]
+files = [
+    {file = "truststore-0.10.4-py3-none-any.whl", hash = "sha256:adaeaecf1cbb5f4de3b1959b42d41f6fab57b2b1666adb59e89cb0b53361d981"},
+    {file = "truststore-0.10.4.tar.gz", hash = "sha256:9d91bd436463ad5e4ee4aba766628dd6cd7010cf3e2461756b3303710eebc301"},
+]
+
+[[package]]
 name = "types-pyyaml"
 version = "6.0.12.20260518"
 description = "Typing stubs for PyYAML"
@@ -1500,4 +1502,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "610de44e9db0473d037df1ebd4854dabf3b32c017ac39a1e334836ce01dfa2a8"
+content-hash = "b60ddff8e9252216209c31a73f77d964307307bb62e21c8765713b244a63bd91"
